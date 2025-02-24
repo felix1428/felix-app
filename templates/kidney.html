@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kidney Disease Detection</title>
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-100">
+    	<!-- Loader -->
+<div id="loader" class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white z-50 hidden">
+    <dotlottie-player 
+        src="https://lottie.host/b272c099-e396-400f-8d04-823513bbbd03/0EtyA9bXhP.lottie" 
+        background="transparent" 
+        speed="1" 
+        style="width: 300px; height: 300px"
+        class="w-24 h-24"  
+        loop 
+        autoplay>
+    </dotlottie-player>
+</div>
+    <header class="sticky top-0 left-0 w-full p-4 bg-white text-[#081314] shadow-md">
+        <div class="container flex justify-between items-center mx-auto">
+            <!-- Logo -->
+            <a href="{{ url_for('index') }}" class="flex items-center p-2">
+                <video src="../static/webImages/Xray Scan.mp4" class="w-20 h-20 md:w-24 md:h-24" autoplay loop muted>
+                    Your browser does not support the video tag.
+                </video>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex space-x-6">
+                <a href="{{ url_for('index') }}" class="nav-link hover:text-[#48BFD4]">Home</a>
+                <a href="{{ url_for('brain') }}" class="nav-link hover:text-[#48BFD4]">Brain Tumor</a>
+                <a href="{{ url_for('kidney') }}" class="nav-link hover:text-[#48BFD4]">Kidney Disease</a>
+                <a href="#" class="nav-link hover:text-[#48BFD4]">Contact</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden p-2" onclick="toggleMenu()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden mt-2 p-4 bg-white shadow-lg">
+            <nav class="flex flex-col space-y-2">
+                <a href="{{ url_for('index') }}" class="nav-link block px-4 py-2 hover:text-[#48BFD4]">Home</a>
+                <a href="{{ url_for('brain') }}" class="nav-link block px-4 py-2 hover:text-[#48BFD4]">Brain Tumor</a>
+                <a href="{{ url_for('kidney') }}" class="nav-link block px-4 py-2 hover:text-[#48BFD4]">Kidney Disease</a>
+                <a href="#" class="nav-link block px-4 py-2 hover:text-[#48BFD4]">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- JavaScript to Toggle Mobile Menu -->
+    <script>
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        // Add event listener for the nav-link click event
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();  // Prevent default link behavior
+
+                // Show loading spinner
+                const loader = document.getElementById('loader');
+                loader.classList.remove('hidden');
+
+                // Hide the loading spinner after 1 second
+                setTimeout(function() {
+                    loader.classList.add('hidden');
+                    window.location.href = link.href;  // Proceed with the navigation after the loader hides
+                }, 1000);  // 1 second delay
+            });
+        });
+    </script>
+<div class="container px-4 py-8 mx-auto">
+    <h1 class="text-3xl font-bold text-center text-[#48BFD4] mb-8">Kidney Disease Detection</h1>
+    
+    <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+        <!-- Form Section -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                <div>
+                    <label for="file" class="block text-sm font-medium text-gray-700 mb-2">Upload Kidney Image:</label>
+                    <input type="file" id="file" name="file" accept="image/*" required
+                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2
+                                  file:mr-4 file:py-2 file:px-4
+                                  file:rounded-md file:border-0
+                                  file:text-sm file:font-semibold
+                                  file:bg-[#48BFD4] file:text-white
+                                  hover:file:bg-[#48BFD4]
+                                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                                  transition-colors duration-200 cursor-pointer">
+                </div>
+                <button type="submit" 
+                        class="w-full bg-[#48BFD4] text-white py-3 px-6 rounded-md hover:bg-[#081314] transition-colors duration-200">
+                    Upload and Detect
+                </button>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        {% if result %}
+        <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl text-center font-bold text-green-600 mb-6">Detection Results</h2>
+            <div class="space-y-4">
+                <p class="text-lg"><strong>Prediction:</strong> {{ result }}</p>
+
+                <!-- Display Uploaded Image -->
+                {% if file_path %}
+                <div class="mt-4">
+                    <img src="{{ url_for('uploaded_file', filename=file_path.split('/')[-1]) }}" 
+                         alt="Uploaded Kidney Image" 
+                         class="w-full max-w-md mx-auto rounded-lg object-contain max-h-96">
+                </div>
+                {% endif %}
+
+                <!-- Suggestion -->
+                {% if suggestion %}
+                <div class="mt-6">
+                    <h3 class="text-xl font-semibold text-blue-600 mb-2">Suggestion:</h3>
+                    <p class="text-gray-700 leading-relaxed">{{ suggestion }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Download Report -->
+                {% if pdf_path %}
+                <div class="mt-6 text-center">
+                    <a href="{{ url_for('download_report', filename=pdf_path.split('/')[-1]) }}" 
+                       class="inline-block bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700 transition-colors duration-200">
+                        📄 Download Report
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+        
+</body>
+</html>

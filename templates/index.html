@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Image Classifier</title>
+	<script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  
+</head>
+<body><div class="space-y-12 bg-[#FFFFFF] text-gray-100">
+	<!-- Loader -->
+<div id="loader" class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white z-50 hidden">
+    <dotlottie-player 
+        src="https://lottie.host/b272c099-e396-400f-8d04-823513bbbd03/0EtyA9bXhP.lottie" 
+        background="transparent" 
+        speed="1" 
+        style="width: 300px; height: 300px"
+        class="w-24 h-24"  
+        loop 
+        autoplay>
+    </dotlottie-player>
+</div>
+	<header class="sticky top-0 left-0 w-full p-4 bg-white text-[#081314] shadow-md">
+        <div class="container flex justify-between items-center mx-auto">
+            <!-- Logo -->
+            <a href="{{ url_for('index') }}" class="flex items-center p-2">
+                <video src="../static/webImages/Xray Scan.mp4" class="w-20 h-20 md:w-24 md:h-24" autoplay loop muted>
+                    Your browser does not support the video tag.
+                </video>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex space-x-6">
+                <a href="{{ url_for('index') }}" class="nav-link hover:text-[#48BFD4]">Home</a>
+                <a href="{{ url_for('brain') }}" class="nav-link hover:text-[#48BFD4]">Brain Tumor</a>
+                <a href="{{ url_for('kidney') }}" class="nav-link hover:text-[#48BFD4]">Kidney Disease</a>
+                <a href="#" class="nav-link hover:text-[#48BFD4]">Contact</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden p-2" onclick="toggleMenu()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden mt-2 p-2 bg-white shadow-lg">
+            <nav class="flex flex-col space-y-2">
+                <a href="{{ url_for('index') }}" class="nav-link block px-4 py-2  hover:text-[#48BFD4]">Home</a>
+                <a href="{{ url_for('brain') }}" class="nav-link block px-4 py-2  hover:text-[#48BFD4]">Brain Tumor</a>
+                <a href="{{ url_for('kidney') }}" class="nav-link block px-4 py-2  hover:text-[#48BFD4]">Kidney Disease</a>
+                <a href="#" class="nav-link block px-4 py-2  hover:text-[#48BFD4]">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- JavaScript to Toggle Mobile Menu -->
+    <script>
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        // Add event listener for the nav-link click event
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();  // Prevent default link behavior
+
+                // Show loading spinner
+                const loader = document.getElementById('loader');
+                loader.classList.remove('hidden');
+
+                // Hide the loading spinner after 1 second
+                setTimeout(function() {
+                    loader.classList.add('hidden');
+                    window.location.href = link.href;  // Proceed with the navigation after the loader hides
+                }, 1000);  // 1 second delay
+            });
+        });
+    </script>
+    
+	<div class="flex flex-col-reverse lg:flex-row items-center  justify-between max-w-6xl mx-auto p-6">
+		<!-- Left Section (Video) -->
+		<div class="w-full lg:w-1/2 max-w-6xl p-2 space-y-9 sm:space-y-12">
+		  <a rel="noopener noreferrer" href="#" class="block w-full group hover:no-underline focus:no-underline">
+			<video src="../static/webImages/Man Undergoes CT Scan.mp4" alt="CT Scan" class="object-cover w-full h-60 rounded sm:h-96 lg:h-auto" autoplay loop muted>
+			  Your browser does not support the video tag.
+			</video>
+		  </a>
+		</div>
+	  
+		<!-- Right Section (Text Content) -->
+		<section class="w-full lg:w-1/2">
+		  <div class="container flex flex-col items-center px-4 py-8 mx-auto text-center md:px-10 lg:px-16 xl:max-w-3xl">
+			<h1 class="text-4xl font-bold leading-none sm:text-5xl text-[#48BFD4]">
+			  AI HealthVision Diagnostics
+			  <span class="text-[#081314]">BRAIN tumour</span> kidney Disease
+			</h1>
+			<p class="px-8 mt-8 mb-12 text-lg text-[#081314]">
+			  Revolutionizing healthcare with advanced AI-driven image analysis for early disease detection, providing accurate insights at your fingertips.
+			</p>
+			<div class="flex flex-wrap justify-center "> <!-- Added relative positioning -->
+				<a href="{{ url_for('about')}}" 
+				   class="px-8 py-3 m-2 text-lg font-semibold rounded bg-white text-[#081314] border border-[#48BFD4] 
+						  hover:bg-[#48BFD4]  hover:text-white "> <!-- Added proper z-index -->
+					Know more About Us
+				</a>
+			</div>
+		  </div>
+		</section>
+	  </div>
+	  
+
+
+
+</div>
+</body>
